@@ -14,7 +14,9 @@ __pycache__/
 # runtime / embeddings / traces
 cache/
 
-# SLURM / local logs
+# SLURM logs (directory tracked via logs/slurm/.gitkeep)
+logs/slurm/*
+!logs/slurm/.gitkeep
 *.out
 *.err
 

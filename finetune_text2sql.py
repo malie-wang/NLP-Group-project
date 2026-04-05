@@ -4,7 +4,7 @@
 数据（两种格式）：
 1) alpaca：build_cot_ft_dataset.py to-alpaca 生成的 JSON 数组
    [{ "instruction", "input", "output" }, ...]
-2) sharegpt：Qwen/ShareGPT 风格 JSONL（本项目的 `qwen3_finetune_sharegpt.jsonl`）
+2) sharegpt：Qwen/ShareGPT 风格 JSONL（`data/finetune/qwen3_finetune_sharegpt.jsonl`）
    {"messages":[{"role":"system|user|assistant","content":"..."} , ...]}
 
 示例：
@@ -12,13 +12,13 @@
   pip install -r requirements_ft.txt
   python finetune_text2sql.py \\
     --base_model Qwen/Qwen3-4B-Instruct-2507 \\
-    --data_path data/spider_alpaca_524.json \\
+    --data_path data/finetune/spider_alpaca_524.json \\
     --data_format alpaca \\
     --output_dir trained_models/qwen3-4b-spider-cot-lora
 
   python finetune_text2sql.py \\
     --base_model Qwen/Qwen3-4B-Instruct-2507 \\
-    --data_path qwen3_finetune_sharegpt.jsonl \\
+    --data_path data/finetune/qwen3_finetune_sharegpt.jsonl \\
     --data_format sharegpt \\
     --output_dir trained_models/qwen3-4b-sharegpt-cot-lora
 """
@@ -72,7 +72,7 @@ def _infer_data_format(path: Path, explicit: str) -> str:
 def main() -> None:
     p = argparse.ArgumentParser(description="LoRA finetune for Text2SQL (nlp-local)")
     p.add_argument("--base_model", type=str, default="Qwen/Qwen3-4B-Instruct-2507")
-    p.add_argument("--data_path", type=str, default="data/spider_alpaca_524.json")
+    p.add_argument("--data_path", type=str, default="data/finetune/spider_alpaca_524.json")
     p.add_argument(
         "--data_format",
         type=str,

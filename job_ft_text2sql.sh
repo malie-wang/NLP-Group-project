@@ -7,14 +7,14 @@
 #SBATCH --time=06:00:00
 #SBATCH --mem=48G
 #SBATCH --job-name=text2sql_ft
-#SBATCH --output=output_ft_text2sql_%x_%j.out
-#SBATCH --error=error_ft_text2sql_%x_%j.err
+#SBATCH --output=logs/slurm/output_ft_text2sql_%x_%j.out
+#SBATCH --error=logs/slurm/error_ft_text2sql_%x_%j.err
 
 # Text2SQL CoT LoRA — 仅用 nlp/ 内脚本与 venv，不依赖 AI6130_Assignment2。
 #
 # 首次：
 #   cd /home/msai/junjie012/nlp && source .venv/bin/activate && pip install -r requirements_ft.txt
-#   python build_cot_ft_dataset.py to-alpaca -i data/sft_messages_524.jsonl -o data/spider_alpaca_524.json
+#   python build_cot_ft_dataset.py to-alpaca -i data/cot/sft_messages_524.jsonl -o data/finetune/spider_alpaca_524.json
 #
 # 提交：
 #   cd /home/msai/junjie012/nlp && sbatch job_ft_text2sql.sh
@@ -22,7 +22,9 @@
 set -euo pipefail
 
 NLP_ROOT="/home/msai/junjie012/nlp"
-DATA_JSONL="${NLP_ROOT}/qwen3_finetune_sharegpt.jsonl"
+DATA_JSONL="${NLP_ROOT}/data/finetune/qwen3_finetune_sharegpt.jsonl"
+
+mkdir -p "${NLP_ROOT}/logs/slurm"
 
 echo "Running on: $(hostname)"
 date

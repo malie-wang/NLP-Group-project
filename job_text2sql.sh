@@ -7,8 +7,8 @@
 #SBATCH --time=04:00:00
 #SBATCH --mem=32G
 #SBATCH --job-name=text2sql
-#SBATCH --output=output_text2sql_%x_%j.out
-#SBATCH --error=error_text2sql_%x_%j.err
+#SBATCH --output=logs/slurm/output_text2sql_%x_%j.out
+#SBATCH --error=logs/slurm/error_text2sql_%x_%j.err
 
 # 用法（在登录节点）:
 #   cd /home/msai/junjie012/nlp && sbatch job_text2sql.sh
@@ -20,6 +20,8 @@ set -euo pipefail
 
 NLP_ROOT="/home/msai/junjie012/nlp"
 VENV="${NLP_ROOT}/.venv"
+
+mkdir -p "${NLP_ROOT}/logs/slurm"
 
 echo "Running on: $(hostname)"
 date
@@ -44,7 +46,7 @@ if [ -n "${CHAT_LORA_PATH:-}" ]; then
   }
 fi
 
-# Spider test，500 条，seed=42；trace -> cache/eval_trace_test.jsonl
+# Spider test, 500, seed=42; trace -> cache/eval_trace_test.jsonl; logs -> logs/slurm/
 # 评 dev：加 --split dev；LoRA：sbatch --export=ALL,CHAT_LORA_PATH=... job_text2sql.sh
 python Text2SQL.py --seed 42 --split test --eval-samples 500
 

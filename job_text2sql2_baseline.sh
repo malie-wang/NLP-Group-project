@@ -7,8 +7,8 @@
 #SBATCH --time=04:00:00
 #SBATCH --mem=32G
 #SBATCH --job-name=text2sql2-baseline
-#SBATCH --output=output_text2sql2_%x_%j.out
-#SBATCH --error=error_text2sql2_%x_%j.err
+#SBATCH --output=logs/slurm/output_text2sql2_%x_%j.out
+#SBATCH --error=logs/slurm/error_text2sql2_%x_%j.err
 
 # Baseline：Text2SQL2.py（无 plan / repair），Spider test 前 500 条，seed=42
 # 用法:
@@ -19,6 +19,8 @@ set -euo pipefail
 
 NLP_ROOT="/home/msai/junjie012/nlp"
 VENV="${NLP_ROOT}/.venv"
+
+mkdir -p "${NLP_ROOT}/logs/slurm"
 
 echo "Running on: $(hostname)"
 date

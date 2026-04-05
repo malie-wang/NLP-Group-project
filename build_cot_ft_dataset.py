@@ -11,9 +11,9 @@ Spider CoT 数据整理 → 微调格式（JSONL）
 
 示例：
   cd /path/to/nlp
-  python build_cot_ft_dataset.py export-prompts --limit 200 --out data/cot_prompts.jsonl
-  python build_cot_ft_dataset.py generate --in data/cot_prompts.jsonl --out data/cot_filled.jsonl
-  python build_cot_ft_dataset.py to-sft --in data/cot_filled.jsonl --out data/sft_messages.jsonl
+  python build_cot_ft_dataset.py export-prompts --limit 200 --out data/cot/cot_prompts.jsonl
+  python build_cot_ft_dataset.py generate --in data/cot/cot_prompts.jsonl --out data/cot/cot_filled.jsonl
+  python build_cot_ft_dataset.py to-sft --in data/cot/cot_filled.jsonl --out data/cot/sft_messages.jsonl
 """
 from __future__ import annotations
 
@@ -191,7 +191,7 @@ def cmd_generate(args: argparse.Namespace) -> None:
         print(
             f"ERROR: input file not found: {in_path}\n"
             "Run this first (from nlp/):\n"
-            "  python build_cot_ft_dataset.py export-prompts --check-sql --out data/cot_prompts.jsonl",
+            "  python build_cot_ft_dataset.py export-prompts --check-sql --out data/cot/cot_prompts.jsonl",
             file=sys.stderr,
         )
         sys.exit(2)
@@ -298,7 +298,7 @@ def cmd_to_sft(args: argparse.Namespace) -> None:
         print(
             f"ERROR: input file not found: {in_path}\n"
             "Generate CoT first:\n"
-            "  python build_cot_ft_dataset.py generate -i data/cot_prompts.jsonl -o data/cot_filled.jsonl",
+            "  python build_cot_ft_dataset.py generate -i data/cot/cot_prompts.jsonl -o data/cot/cot_filled.jsonl",
             file=sys.stderr,
         )
         sys.exit(2)
@@ -372,7 +372,7 @@ def main() -> None:
 
     e = sub.add_parser("export-prompts", help="Export teacher prompts JSONL from train split")
     e.add_argument("--train", default=t2s.TRAIN_DATA_PATH, help="train json path")
-    e.add_argument("--out", default="data/cot_prompts.jsonl")
+    e.add_argument("--out", default="data/cot/cot_prompts.jsonl")
     e.add_argument("--limit", type=int, default=0, help="max rows (0=all)")
     e.add_argument(
         "--check-sql",
@@ -382,8 +382,8 @@ def main() -> None:
     e.set_defaults(func=cmd_export_prompts)
 
     g = sub.add_parser("generate", help="Fill cot via OpenAI-compatible API")
-    g.add_argument("--input", "-i", default="data/cot_prompts.jsonl")
-    g.add_argument("--out", "-o", default="data/cot_filled.jsonl")
+    g.add_argument("--input", "-i", default="data/cot/cot_prompts.jsonl")
+    g.add_argument("--out", "-o", default="data/cot/cot_filled.jsonl")
     g.add_argument("--resume", action="store_true", help="merge non-empty cot from --out then fill the rest")
     g.add_argument("--sleep", type=float, default=0.2, help="seconds between API calls")
     g.add_argument("--timeout", type=int, default=120)
@@ -402,16 +402,16 @@ def main() -> None:
     g.set_defaults(func=cmd_generate)
 
     t = sub.add_parser("to-sft", help="Convert filled JSONL to messages JSONL for SFT")
-    t.add_argument("--input", "-i", default="data/cot_filled.jsonl")
-    t.add_argument("--out", "-o", default="data/sft_messages.jsonl")
+    t.add_argument("--input", "-i", default="data/cot/cot_filled.jsonl")
+    t.add_argument("--out", "-o", default="data/cot/sft_messages.jsonl")
     t.set_defaults(func=cmd_to_sft)
 
     a = sub.add_parser(
         "to-alpaca",
         help="Convert messages JSONL to one .json array for AI6130 finetune.py",
     )
-    a.add_argument("--input", "-i", default="data/sft_messages_524.jsonl")
-    a.add_argument("--out", "-o", default="data/spider_alpaca_524.json")
+    a.add_argument("--input", "-i", default="data/cot/sft_messages_524.jsonl")
+    a.add_argument("--out", "-o", default="data/finetune/spider_alpaca_524.json")
     a.set_defaults(func=cmd_to_alpaca)
 
     args = p.parse_args()
