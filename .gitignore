@@ -1,0 +1,29 @@
+# secrets
+.env
+.env.*
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# runtime / embeddings / traces
+cache/
+
+# SLURM / local logs
+*.out
+*.err
+
+# large artifacts (uncomment if you track data elsewhere e.g. LFS / release)
+spider_data/
+data/
+trained_models/
+*.jsonl
+
+# editors
+.idea/
+.vscode/

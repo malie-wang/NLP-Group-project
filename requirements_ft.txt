@@ -1,0 +1,5 @@
+# LoRA 微调 Text2SQL（与 Text2SQL 推理共用 nlp/.venv 时可追加安装）
+peft>=0.11.0
+datasets>=2.16.0
+# Spider 官方 EX（spider_official/，需 punkt：python -c "import nltk;nltk.download('punkt');nltk.download('punkt_tab')")
+nltk>=3.8
